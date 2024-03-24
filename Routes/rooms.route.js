@@ -39,7 +39,6 @@ roomRouter.get('/:roomId', async (req, res) => {
     }
 });
 
-
 // Route to create a new room
 roomRouter.post('/add-room', async (req, res) => {
     const { floorNumber, roomType, image, title } = req.body;
@@ -91,6 +90,30 @@ roomRouter.post('/:roomId/children', async (req, res) => {
     }
 });
 
+// ************ Route for update the information of particular room ************
+roomRouter.patch("/update/:roomId", async (req, res) => {
+    const { roomId } = req.params;
+    const payload = req.body;
 
+    try {
+        await RoomModel.findByIdAndUpdate({ _id: roomId }, payload);
+        const updatedRoom = await RoomModel.findById(roomId);
+        res.status(200).json({ msg: `Successfully Updated Room Details which id is ${roomId}`, room: updatedRoom });
+    } catch (err) {
+        res.status(404).json({ error: err.message });
+    }
+});
+
+// ************ Remove the room from list ****************
+roomRouter.delete("/delete/:roomId", async (req, res) => {
+    const { roomId } = req.params;
+
+    try {
+        const room = await RoomModel.findByIdAndDelete({ _id: roomId });
+        return res.status(200).json({ msg: `Successfully Deleted the Room which id is ${roomId}`, room });
+    } catch (err) {
+        res.status(404).json({ error: err.message });
+    }
+});
 
 module.exports = { roomRouter };
