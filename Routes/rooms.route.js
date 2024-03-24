@@ -2,6 +2,44 @@ const { Router } = require('express');
 const RoomModel = require('../Models/room.model');
 const roomRouter = Router();
 
+
+// Route for retrieving the all rooms with its type and floor filters
+roomRouter.get('/get-rooms', async (req, res) => {
+    const { floor, type } = req.query;
+
+    try {
+        if (floor && type) {
+            const rooms = await RoomModel.find({ floorNumber: floor, roomType: { $regex: type, $options: "six" } });
+            res.status(200).json(rooms);
+        } else if (floor) {
+            const rooms = await RoomModel.find({ floorNumber: floor });
+            res.status(200).json(rooms);
+        } else if (type) {
+            const rooms = await RoomModel.find({ roomType: { $regex: type, $options: "six" } });
+            res.status(200).json(rooms);
+        } else {
+            const rooms = await RoomModel.find();
+            res.status(200).json({ rooms });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Route for retrieving any particular room by id --> Used in dynamic routing when nevigate to single room
+roomRouter.get('/:roomId', async (req, res) => {
+    const { roomId } = req.params;
+
+    try {
+        const room = await RoomModel.findOne({ _id: roomId });
+        res.status(200).json({ msg: `Successfully get Room which id is ${roomId}`, room });
+    } catch (err) {
+        res.status(404).json({ error: err.message });
+    }
+});
+
+
 // Route to create a new room
 roomRouter.post('/add-room', async (req, res) => {
     const { floorNumber, roomType, image, title } = req.body;
@@ -25,7 +63,7 @@ roomRouter.post('/add-room', async (req, res) => {
 // Route to add a child to a room
 roomRouter.post('/:roomId/children', async (req, res) => {
     const { title, subTitle, price, link, longitude, latitude } = req.body;
-    const roomId = req.params.roomId;
+    const { roomId } = req.params;
 
     try {
         const room = await RoomModel.findById(roomId);
