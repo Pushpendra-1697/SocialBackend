@@ -16,7 +16,7 @@ Then do the following steps:
 ```bash
     npm run server
 ```
-## API Tested on Thunder Client/Postman/Browser
+## API Tested on Thunder Client/Postman/Browser 👍
 
 ## Render Hosted link
 https://socialbackend-0rch.onrender.com
