@@ -1,4 +1,5 @@
 # SocialBackend
+Developing a room management system where users can create rooms with unique characteristics and add distinct child items to each room, ensuring each child remains unique across different rooms.
 
 ## Installation steps / How to run locally? ✌️
 
