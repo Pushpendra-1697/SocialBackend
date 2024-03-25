@@ -67,8 +67,8 @@ roomRouter.post('/:roomId/children', async (req, res) => {
     try {
         const room = await RoomModel.findById(roomId);
         if (!room) {
-            return res.status(404).json({ error: 'Room not found' });
-        }
+            return res.json({ error: 'Room not found' });
+        };
 
         // Check if the child already exists in any other room
         const childExists = await RoomModel.exists({
@@ -76,14 +76,14 @@ roomRouter.post('/:roomId/children', async (req, res) => {
         });
 
         if (childExists) {
-            return res.status(400).json({ error: `Child already exists in a parent room which id is ${childExists._id}` });
-        }
+            return res.json({ error: `Child already exists in a parent room` });
+        };
 
         // Create new child
         const newChild = { title, subTitle, price, link, latitude, longitude };
         room.children.push(newChild);
         await room.save();
-        res.status(201).json({ msg: `Child added in ${room.roomType} room at ${room.floorNumber}th floor`, room });
+        res.status(201).json({ status: true, msg: `Child added in ${room.roomType} room at ${room.floorNumber}th floor`, room });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
