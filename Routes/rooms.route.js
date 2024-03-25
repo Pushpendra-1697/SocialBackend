@@ -19,7 +19,7 @@ roomRouter.get('/get-rooms', async (req, res) => {
             res.status(200).json(rooms);
         } else {
             const rooms = await RoomModel.find();
-            res.status(200).json({ rooms });
+            res.status(200).json(rooms);
         }
     } catch (error) {
         console.error(error);
@@ -52,7 +52,7 @@ roomRouter.post('/add-room', async (req, res) => {
             children: [] // Initialize with an empty array of children
         });
         await newRoom.save();
-        res.status(201).json({ msg: `Room Successfully Created in ${floorNumber}th floor`, newRoom });
+        res.status(201).json({ status: true, msg: `Room Successfully Created in ${floorNumber}th floor`, newRoom });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
