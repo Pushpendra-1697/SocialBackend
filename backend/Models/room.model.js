@@ -5,7 +5,7 @@ const ChildSchema = require("./child.model");
 const RoomSchema = new Schema(
     {
         floorNumber: Number,
-        roomType: { type: String, required: true },
+        roomType: [{ type: String, required: true }],
         image: String,
         title: String,
         children: [ChildSchema] // Embedding child documents
